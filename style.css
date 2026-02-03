@@ -1,0 +1,33 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 16px;
+}
+
+header {
+  text-align: center;
+}
+
+.summary {
+  background: linear-gradient(135deg, #4CAF50, #81C784);
+  color: white;
+  padding: 16px;
+  border-radius: 16px;
+  margin: 16px 0;
+}
+
+.upload {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.list .card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
