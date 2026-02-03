@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>บิลวันนี้</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>📸 บิลวันนี้</h1>
+    <p id="today"></p>
+  </header>
+
+  <section class="summary">
+    <h2>💰 รวมวันนี้</h2>
+    <div id="total">0.00 บาท</div>
+  </section>
+
+  <section class="upload">
+    <input type="file" id="imageInput" accept="image/*" />
+    <button onclick="addReceipt()">➕ เพิ่มบิล</button>
+  </section>
+
+  <section class="list" id="receiptList"></section>
+
+  <!-- OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
