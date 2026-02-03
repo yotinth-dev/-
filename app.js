@@ -1,52 +1,30 @@
-const today = new Date().toISOString().slice(0, 10);
-document.getElementById("today").innerText =
-  new Date().toLocaleDateString("th-TH");
-
-let receipts = JSON.parse(localStorage.getItem(today)) || [];
-
-function addReceipt() {
-  const file = document.getElementById("imageInput").files[0];
-  if (!file) return alert("กรุณาเลือกภาพบิล");
-
-  Tesseract.recognize(file, "tha+eng").then(({ data }) => {
-    const text = data.text;
-    const total = extractTotal(text);
-
-    receipts.push({
-      time: new Date().toLocaleTimeString("th-TH"),
-      total: total,
-      text: text
-    });
-
-    localStorage.setItem(today, JSON.stringify(receipts));
-    render();
-  });
-}
-
 function extractTotal(text) {
-  const match = text.match(/(\d+[.,]\d{2})/g);
-  if (!match) return 0;
-  return parseFloat(match.pop().replace(",", ""));
+  // 1️⃣ มองหาคำที่สื่อว่าเป็นยอดรวม
+  const keywords = [
+    "รวม", "รวมเงิน", "รวมทั้งสิ้น", "ยอดรวม",
+    "total", "amount", "grand total"
+  ];
+
+  const lines = text.split("\n");
+
+  for (const line of lines) {
+    const lower = line.toLowerCase();
+
+    if (keywords.some(k => lower.includes(k))) {
+      const match = line.match(/(\d+[.,]\d{2})/);
+      if (match) {
+        return parseFloat(match[1].replace(",", ""));
+      }
+    }
+  }
+
+  // 2️⃣ ถ้าไม่เจอคำ → เลือก "ตัวเลขที่มากที่สุด"
+  const matches = text.match(/\d+[.,]\d{2}/g);
+  if (!matches) return 0;
+
+  const numbers = matches
+    .map(n => parseFloat(n.replace(",", "")))
+    .filter(n => n >= 1); // ตัดเศษเล็ก ๆ
+
+  return Math.max(...numbers);
 }
-
-function render() {
-  const list = document.getElementById("receiptList");
-  list.innerHTML = "";
-
-  let sum = 0;
-
-  receipts.forEach(r => {
-    sum += r.total;
-    list.innerHTML += `
-      <div class="card">
-        <div>🧾 ${r.time}</div>
-        <div>${r.total.toFixed(2)} ฿</div>
-      </div>
-    `;
-  });
-
-  document.getElementById("total").innerText =
-    sum.toFixed(2) + " บาท";
-}
-
-render();
